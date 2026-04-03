@@ -61,7 +61,7 @@ export default function RajaView({ players, myId, roomId, phase, currentRound, t
             <PlayerGrid players={players} revealRoleForId={mantri?.id} highlightId={mantri?.id} />
           </div>
 
-          <StatusRibbon>Royal court is watching</StatusRibbon>
+          <StatusRibbon>Royal court is watching Everything</StatusRibbon>
         </>
       )}
     </GameShell>
