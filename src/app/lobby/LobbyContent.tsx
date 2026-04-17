@@ -9,9 +9,8 @@ import socket, {
   getStoredSession,
   persistSession
 } from "../../socket/socket";
-import { Mic, MicOff, Crown } from "lucide-react";
+import { Crown } from "lucide-react";
 import { motion } from "framer-motion";
-import { startVoice, stopVoice } from "../../lib/voice";
 
 interface Player {
   id: string;
@@ -19,7 +18,6 @@ interface Player {
   score: number;
   ready: boolean;
   isHost?: boolean;
-  mic?: boolean;
   speaking?: boolean;
 }
 
@@ -39,7 +37,6 @@ export default function LobbyContent() {
 
   const [players, setPlayers] = useState<Player[]>([]);
   const [myId, setMyId] = useState("");
-  const [startingVoice, setStartingVoice] = useState(false);
   const [totalRounds, setTotalRounds] = useState<3 | 5>(5);
 
   const fallbackAvatar = "/default.png";
@@ -100,16 +97,6 @@ export default function LobbyContent() {
       }
     };
 
-    const handleSpeaking = (data: { id: string; speaking: boolean }) => {
-      setPlayers((prev) =>
-        prev.map((player) =>
-          player.id === data.id
-            ? { ...player, speaking: data.speaking }
-            : player
-        )
-      );
-    };
-
     const handleGameStart = ({ roomId: nextRoomId }: { roomId: string }) => {
       console.log("[lobby] navigating to game", nextRoomId);
       router.push(`/game?room=${nextRoomId}`);
@@ -119,7 +106,6 @@ export default function LobbyContent() {
 
     activeSocket.on("connect", updateId);
     activeSocket.on("room_players", handlePlayers);
-    activeSocket.on("player_speaking", handleSpeaking);
     activeSocket.on("game_started", handleGameStart);
 
     if (roomId) {
@@ -130,7 +116,6 @@ export default function LobbyContent() {
     return () => {
       activeSocket.off("connect", updateId);
       activeSocket.off("room_players", handlePlayers);
-      activeSocket.off("player_speaking", handleSpeaking);
       activeSocket.off("game_started", handleGameStart);
     };
 
@@ -142,29 +127,6 @@ export default function LobbyContent() {
   const toggleReady = () => {
     if (!roomId) return;
     socket?.emit("player_ready", { roomId });
-  };
-
-  const toggleMic = async () => {
-
-    if (!roomId || startingVoice) return;
-
-    try {
-      setStartingVoice(true);
-
-      if (!me?.mic) {
-        await startVoice(roomId);
-      } else {
-        stopVoice();
-      }
-
-      socket?.emit("toggle_mic", { roomId });
-
-    } catch (err) {
-      console.error("[lobby] mic error", err);
-      alert("Microphone permission denied.");
-    } finally {
-      setStartingVoice(false);
-    }
   };
 
   const startGame = () => {
@@ -189,7 +151,6 @@ export default function LobbyContent() {
     }
 
     clearStoredSession();
-    stopVoice();
     router.push("/");
   };
 
@@ -202,18 +163,10 @@ relative overflow-x-hidden px-4">
         Room Code: {roomId}
       </div>
 
-      <motion.button
-        whileTap={{ scale: 0.9 }}
-        onClick={toggleMic}
-        className="absolute top-4 right-4 bg-white p-2 rounded-full shadow hover:scale-110 transition"
-      >
-        {me?.mic ? <Mic size={18} /> : <MicOff size={18} />}
-      </motion.button>
-
       <img
         src="/lobbytitle.png"
         alt="Lobby title"
-        className="mt-16 w-[260px] sm:w-[380px]"
+        className="mt-10 w-[340px] sm:w-[500px]"
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 mt-10 w-full max-w-5xl">
@@ -236,10 +189,6 @@ ${player.speaking ? "ring-4 ring-green-400 scale-110 shadow-green-300 shadow-xl"
                 className="absolute -top-2 -left-2 text-yellow-500"
               />
             )}
-
-            <div className="absolute -top-2 right-2 bg-white px-2 py-[2px] rounded-full text-xs shadow flex items-center">
-              {player.mic ? <Mic size={12} /> : <MicOff size={12} />}
-            </div>
 
             <img
               src={fallbackAvatar}

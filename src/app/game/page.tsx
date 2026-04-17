@@ -13,6 +13,7 @@ interface Player {
   id: string;
   name: string;
   score: number;
+  roundScore?: number;
   role?: string;
   isHost?: boolean;
 }
@@ -20,11 +21,19 @@ interface Player {
 interface GuessResult {
   correct: boolean;
   chorId: string;
+  guessedId?: string;
+  roundNumber?: number;
+  roundScores?: Record<string, number>;
+}
+
+interface GuessResultPayload extends GuessResult {
+  room?: Room;
 }
 
 interface Room {
   roomId: string;
   state: Phase | "FINISHED";
+  gameState?: "playing" | "roundResult" | "finalResult";
   players: Player[];
   result?: GuessResult;
   currentRound: number;
@@ -104,7 +113,7 @@ export default function Game() {
         }
       }
 
-      if (room.state === "FINISHED") {
+      if (room.gameState === "finalResult" || room.state === "FINISHED") {
         clearRevealTimer();
         setGameFinished(true);
         setPhase("RESULT");
@@ -113,7 +122,7 @@ export default function Game() {
 
       setGameFinished(false);
 
-      if (room.state === "RESULT") {
+      if (room.gameState === "roundResult" || room.state === "RESULT") {
         clearRevealTimer();
         setPhase("RESULT");
         return;
@@ -153,8 +162,19 @@ export default function Game() {
       });
     };
 
-    const handleResult = (nextResult: GuessResult) => {
-      setResult(nextResult);
+    const handleResult = (nextResult: GuessResultPayload) => {
+      if (nextResult.room) {
+        applyRoomState(nextResult.room);
+        return;
+      }
+
+      setResult({
+        correct: nextResult.correct,
+        chorId: nextResult.chorId,
+        guessedId: nextResult.guessedId,
+        roundNumber: nextResult.roundNumber,
+        roundScores: nextResult.roundScores,
+      });
       setGameFinished(false);
       setPhase("RESULT");
     };
@@ -190,6 +210,11 @@ export default function Game() {
     socket?.emit("next_round", { roomId });
   };
 
+  const handlePlayAgain = () => {
+    if (!roomId) return;
+    socket?.emit("restart_game", { roomId });
+  };
+
   const commonProps = {
     players,
     myId,
@@ -200,13 +225,14 @@ export default function Game() {
     gameFinished,
     result,
     onNextRound: handleNextRound,
+    onPlayAgain: handlePlayAgain,
   };
 
   const renderRoleView = () => {
     if (!myRole) {
       return (
         <div className="w-full max-w-4xl rounded-[28px] border-[10px] border-[#d77314] bg-[linear-gradient(180deg,#f8f0dc_0%,#f4ead4_49%,#ebddc2_50%,#f7efd8_100%)] p-10 text-center shadow-[0_20px_60px_rgba(64,24,0,0.22)]">
-          <div className="text-3xl font-black uppercase text-[#5e3516]">Waiting for game to start...</div>
+          <div className="text-2xl font-black uppercase text-[#5e3516] sm:text-3xl">Waiting for game to start...</div>
         </div>
       );
     }
@@ -226,7 +252,9 @@ export default function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_center,#ffc76c_0%,#f28f1d_48%,#d96d00_100%)] px-4 py-6 sm:px-8">
+    <div className="relative flex min-h-screen justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_18%,rgba(255,196,89,0.32)_0%,transparent_28%),linear-gradient(135deg,#1b0d09_0%,#4d1f12_38%,#8a2e16_67%,#2a110b_100%)] px-3 py-3 sm:px-5">
+      <div className="mandala-field pointer-events-none absolute inset-0 opacity-[0.12]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_48%,rgba(0,0,0,0.58)_100%)]" />
       {renderRoleView()}
     </div>
   );

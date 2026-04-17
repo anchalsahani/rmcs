@@ -1,6 +1,19 @@
 import { io, type Socket } from "socket.io-client";
 
-const URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+function getSocketUrl() {
+  if (typeof window !== "undefined") {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const envUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
+
+    if (envUrl) return envUrl;
+
+    return `${protocol}//${hostname}:5000`;
+  }
+
+  return process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+}
+
 const STORAGE_KEY = "rmcs_session";
 
 export interface StoredSession {
@@ -21,7 +34,8 @@ declare global {
 }
 
 function createSocket() {
-  const instance = io(URL, {
+  const url = getSocketUrl();
+  const instance = io(url, {
     autoConnect: false,
     transports: ["websocket"],
   });
@@ -67,7 +81,7 @@ function getSocket(): Socket | null {
 export function connectSocket() {
   const socket = getSocket();
   if (socket && !socket.connected) {
-    console.log("[socket] connecting to", URL);
+    console.log("[socket] connecting to", getSocketUrl());
     socket.connect();
   }
   return socket;

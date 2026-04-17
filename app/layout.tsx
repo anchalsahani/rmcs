@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Chicle, Indie_Flower } from "next/font/google";
+import { Plus_Jakarta_Sans, Yatra_One } from "next/font/google";
 
-const chicle = Chicle({
+const display = Yatra_One({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-chicle",
+  variable: "--font-display",
 });
 
-const indie = Indie_Flower({
+const ui = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-indie",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-ui",
 });
 
 export const metadata: Metadata = {
@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${chicle.variable} ${indie.variable}`}>
-      <body className="font-body">{children}</body>
+    <html lang="en" className={`${display.variable} ${ui.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }
