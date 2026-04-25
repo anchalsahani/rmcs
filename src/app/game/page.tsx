@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import socket, { connectSocket, ensureSessionId, getStoredSession, persistSession } from "../../socket/socket";
@@ -51,7 +51,7 @@ const GAME_ASSETS = [
   "/sipahi.png",
 ];
 
-export default function Game() {
+function GameContent() {
   const params = useSearchParams();
   const requestedRoomId = params.get("room") ?? "";
   const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -257,5 +257,12 @@ export default function Game() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_48%,rgba(0,0,0,0.58)_100%)]" />
       {renderRoleView()}
     </div>
+  );
+}
+export default function Game() {
+  return (
+    <Suspense fallback={<div className="text-white text-center mt-10">Loading...</div>}>
+      <GameContent />
+    </Suspense>
   );
 }
