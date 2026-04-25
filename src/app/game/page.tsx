@@ -272,9 +272,9 @@ function GameContent() {
   };
 
   return (
-    <div className="relative flex min-h-screen justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_18%,rgba(255,196,89,0.32)_0%,transparent_28%),linear-gradient(135deg,#1b0d09_0%,#4d1f12_38%,#8a2e16_67%,#2a110b_100%)] px-3 py-3 sm:px-5">
+    <div className="relative flex min-h-screen justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_18%,rgba(255,224,148,0.26)_0%,transparent_30%),radial-gradient(circle_at_18%_15%,rgba(255,174,85,0.22)_0%,transparent_24%),linear-gradient(180deg,#ffcf7a_0%,#ff9c2f_46%,#ff7a00_100%)] px-3 py-3 sm:px-5">
       <div className="mandala-field pointer-events-none absolute inset-0 opacity-[0.12]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_48%,rgba(0,0,0,0.58)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_52%,rgba(120,45,0,0.18)_100%)]" />
       {renderRoleView()}
     </div>
   );
