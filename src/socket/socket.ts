@@ -42,7 +42,6 @@ function createSocket() {
 
   const instance = io(url, {
     autoConnect: false,
-    transports: ["websocket"],
   });
 
   instance.on("connect", () => {
