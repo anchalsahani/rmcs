@@ -1,84 +1,62 @@
 @import "tailwindcss";
 
-/* -----------------------------
-   FONTS
-------------------------------*/
-
 :root {
   --font-heading: var(--font-chicle);
   --font-handwritten: var(--font-indie);
+  --font-storyline: var(--font-story);
 
-  /* background gradient */
   --bg-start: #f97316;
   --bg-mid: #ea580c;
   --bg-end: #7c2d12;
-
-  /* paper cards */
   --paper: #fff6e5;
   --paper-dark: #f2e3c6;
-
-  /* gold accents */
   --gold: #d4a017;
   --gold-light: #facc15;
-
-  /* text */
   --text-dark: #4b1d12;
-
-  /* UI shadows */
-  --shadow-soft: 0 10px 30px rgba(0,0,0,0.2);
-  --shadow-paper: 0 8px 18px rgba(0,0,0,0.25);
-
-  /* glow */
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --shadow-paper: 0 8px 18px rgba(0, 0, 0, 0.25);
   --glow: 0 0 25px rgba(255, 200, 0, 0.6);
 }
 
-/* -----------------------------
-   GLOBAL BODY
-------------------------------*/
+html,
+body {
+  min-height: 100%;
+}
 
 body {
   min-height: 100vh;
-  .font-raja {
-  font-family: var(--font-chicle);
-}
-
-.font-mantri {
-  font-family: var(--font-indie);
-}
   background:
-    radial-gradient(circle at center, rgba(255,200,120,0.3), transparent 40%),
-    linear-gradient(
-      180deg,
-      var(--bg-start),
-      var(--bg-mid),
-      var(--bg-end)
-    );
-
+    radial-gradient(circle at center, rgba(255, 200, 120, 0.3), transparent 40%),
+    linear-gradient(180deg, var(--bg-start), var(--bg-mid), var(--bg-end));
   color: var(--text-dark);
-
   font-family: var(--font-handwritten);
-
   overflow-x: hidden;
 }
 
-/* -----------------------------
-   HEADING FONT
-------------------------------*/
+.font-raja {
+  font-family: var(--font-heading);
+}
+
+.font-ui,
+.font-body {
+  font-family: var(--font-handwritten);
+}
+
+.game-subtitle,
+.font-mantri {
+  font-family: var(--font-storyline);
+}
 
 .game-title {
   font-family: var(--font-heading);
 }
 
-/* -----------------------------
-   PAPER CARD STYLE
-------------------------------*/
-
 .paper-card {
+  position: relative;
   background: var(--paper);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 18px;
   box-shadow: var(--shadow-paper);
-  border: 1px solid rgba(0,0,0,0.08);
-  position: relative;
 }
 
 .paper-card::after {
@@ -86,67 +64,39 @@ body {
   position: absolute;
   inset: 0;
   opacity: 0.06;
-
-  background-image:
-  repeating-linear-gradient(
+  background-image: repeating-linear-gradient(
     45deg,
     transparent,
     transparent 3px,
-    rgba(0,0,0,0.05) 4px
+    rgba(0, 0, 0, 0.05) 4px
   );
-
   pointer-events: none;
 }
 
-/* -----------------------------
-   BUTTONS
-------------------------------*/
-
 .btn-gold {
-  background: linear-gradient(
-    180deg,
-    #ffd977,
-    #f59e0b
-  );
-
+  background: linear-gradient(180deg, #ffd977, #f59e0b);
   color: #5b2b00;
-
   font-weight: 600;
-
   padding: 14px 26px;
-
   border-radius: 12px;
-
   box-shadow: var(--shadow-soft);
-
   transition: all 0.2s ease;
 }
 
 .btn-gold:hover {
   transform: translateY(-2px);
-
   box-shadow:
-  0 12px 30px rgba(0,0,0,0.25),
-  var(--glow);
+    0 12px 30px rgba(0, 0, 0, 0.25),
+    var(--glow);
 }
 
 .btn-red {
-  background: linear-gradient(
-    180deg,
-    #ef4444,
-    #b91c1c
-  );
-
+  background: linear-gradient(180deg, #ef4444, #b91c1c);
   color: white;
-
   padding: 14px 26px;
-
   border-radius: 12px;
-
   font-weight: 600;
-
   box-shadow: var(--shadow-soft);
-
   transition: all 0.2s ease;
 }
 
@@ -154,29 +104,104 @@ body {
   transform: translateY(-2px);
 }
 
-/* -----------------------------
-   INPUT FIELD
-------------------------------*/
-
 .input-field {
   padding: 12px 18px;
-
   border-radius: 12px;
-
   background: var(--paper);
-
-  border: 1px solid rgba(0,0,0,0.1);
-
+  border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: var(--shadow-soft);
-
   font-family: var(--font-handwritten);
 }
+
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .animate-float {
   animation: float 5s ease-in-out infinite;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.mandala-field {
+  background-image:
+    radial-gradient(circle at center, transparent 0 30px, rgba(255, 215, 112, 0.28) 31px 32px, transparent 33px 72px, rgba(255, 215, 112, 0.18) 73px 74px, transparent 75px),
+    repeating-conic-gradient(from 12deg, rgba(255, 215, 112, 0.16) 0deg 5deg, transparent 5deg 16deg);
+  background-position: center;
+  background-size: 420px 420px;
+  mix-blend-mode: screen;
+}
+
+.reveal-card {
+  animation: reveal-breathe 3.4s ease-in-out infinite;
+}
+
+.result-flip-card {
+  animation: result-flip-in 680ms cubic-bezier(0.2, 0.9, 0.2, 1.08) both;
+  transform-origin: center;
+}
+
+.score-count {
+  animation: score-pop 900ms ease-out both;
+}
+
+@keyframes reveal-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42), 0 0 52px rgba(255, 181, 61, 0.18);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow: 0 36px 100px rgba(0, 0, 0, 0.48), 0 0 78px rgba(255, 181, 61, 0.34);
+  }
+}
+
+@keyframes result-flip-in {
+  0% {
+    opacity: 0;
+    transform: perspective(900px) rotateY(78deg) translateY(18px) scale(0.92);
+  }
+
+  65% {
+    opacity: 1;
+    transform: perspective(900px) rotateY(-8deg) translateY(-4px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0deg) translateY(0) scale(1);
+  }
+}
+
+@keyframes score-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.84);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.12);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

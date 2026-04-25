@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Plus_Jakarta_Sans, Yatra_One } from "next/font/google";
+import { Chicle, Indie_Flower, Story_Script } from "next/font/google";
 
-const display = Yatra_One({
+const chicle = Chicle({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-display",
+  variable: "--font-chicle",
 });
 
-const ui = Plus_Jakarta_Sans({
+const indie = Indie_Flower({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-ui",
+  weight: "400",
+  variable: "--font-indie",
+});
+
+const story = Story_Script({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-story",
 });
 
 export const metadata: Metadata = {
@@ -25,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${ui.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${chicle.variable} ${indie.variable} ${story.variable}`}>
+      <body className="font-body">{children}</body>
     </html>
   );
 }

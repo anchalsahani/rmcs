@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --font-heading: var(--font-display);
-  --font-handwritten: var(--font-ui);
+  --font-heading: var(--font-chicle);
+  --font-handwritten: var(--font-indie);
+  --font-storyline: var(--font-story);
   --bg-start: #f97316;
   --bg-mid: #ea580c;
   --bg-end: #7c2d12;
@@ -18,48 +19,43 @@
 
 html,
 body {
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 body {
+  min-height: 100vh;
   background:
     radial-gradient(circle at center, rgba(255, 200, 120, 0.3), transparent 40%),
     linear-gradient(180deg, var(--bg-start), var(--bg-mid), var(--bg-end));
   color: var(--text-dark);
-  font-family: var(--font-ui);
-  overflow-x: hidden;
-}
-
-.font-body {
   font-family: var(--font-handwritten);
-}
-
-.font-ui {
-  font-family: var(--font-ui);
+  overflow-x: hidden;
 }
 
 .font-raja {
   font-family: var(--font-heading);
 }
 
-.font-mantri {
+.font-ui,
+.font-body {
   font-family: var(--font-handwritten);
+}
+
+.game-subtitle,
+.font-mantri {
+  font-family: var(--font-storyline);
 }
 
 .game-title {
   font-family: var(--font-heading);
 }
 
-.game-subtitle {
-  font-family: var(--font-ui);
-}
-
 .paper-card {
+  position: relative;
   background: var(--paper);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 18px;
   box-shadow: var(--shadow-paper);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  position: relative;
 }
 
 .paper-card::after {
@@ -88,7 +84,9 @@ body {
 
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25), var(--glow);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.25),
+    var(--glow);
 }
 
 .btn-red {
@@ -116,15 +114,13 @@ body {
 
 @keyframes float {
   0% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
-
   50% {
     transform: translateY(-10px);
   }
-
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 }
 
@@ -188,7 +184,7 @@ body {
 
   100% {
     opacity: 1;
-    transform: perspective(900px) rotateY(0deg) translateY(0) scale(1);
+    transform: perspective(900px) rotateY(0) translateY(0) scale(1);
   }
 }
 

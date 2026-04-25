@@ -19,6 +19,20 @@ interface GuessResult {
   roundScores?: Record<string, number>;
 }
 
+interface RoundHistoryEntry {
+  roundNumber: number;
+  guessedId?: string;
+  chorId: string;
+  correct: boolean;
+  players: Array<{
+    id: string;
+    name: string;
+    role?: string;
+    roundScore: number;
+    totalScore: number;
+  }>;
+}
+
 interface Props {
   players: Player[];
   myId: string;
@@ -28,11 +42,12 @@ interface Props {
   totalRounds: number;
   gameFinished?: boolean;
   result?: GuessResult | null;
+  roundHistory?: RoundHistoryEntry[];
   onNextRound?: () => void;
   onPlayAgain?: () => void;
 }
 
-export default function RajaView({ players, myId, roomId, phase, currentRound, totalRounds, gameFinished, result, onNextRound, onPlayAgain }: Props) {
+export default function RajaView({ players, myId, roomId, phase, currentRound, totalRounds, gameFinished, result, roundHistory, onNextRound, onPlayAgain }: Props) {
   const me = players.find((player) => player.id === myId);
   const mantri = players.find((player) => player.role === "mantri");
 
@@ -57,6 +72,7 @@ export default function RajaView({ players, myId, roomId, phase, currentRound, t
           onNextRound={onNextRound}
           onPlayAgain={onPlayAgain}
           showNextRound={Boolean(me?.isHost)}
+          roundHistory={roundHistory}
         />
       ) : (
         <>

@@ -30,6 +30,22 @@ interface GuessResultPayload extends GuessResult {
   room?: Room;
 }
 
+interface RoundHistoryPlayer {
+  id: string;
+  name: string;
+  role?: string;
+  roundScore: number;
+  totalScore: number;
+}
+
+interface RoundHistoryEntry {
+  roundNumber: number;
+  guessedId?: string;
+  chorId: string;
+  correct: boolean;
+  players: RoundHistoryPlayer[];
+}
+
 interface Room {
   roomId: string;
   state: Phase | "FINISHED";
@@ -38,6 +54,7 @@ interface Room {
   result?: GuessResult;
   currentRound: number;
   totalRounds: number;
+  roundHistory?: RoundHistoryEntry[];
 }
 
 type Phase = "WAITING" | "REVEAL" | "GUESSING" | "RESULT";
@@ -66,6 +83,7 @@ function GameContent() {
   const [currentRound, setCurrentRound] = useState(1);
   const [totalRounds, setTotalRounds] = useState(5);
   const [gameFinished, setGameFinished] = useState(false);
+  const [roundHistory, setRoundHistory] = useState<RoundHistoryEntry[]>([]);
 
   useEffect(() => {
     const activeSocket = connectSocket();
@@ -92,6 +110,7 @@ function GameContent() {
       setResult(room.result ?? null);
       setCurrentRound(room.currentRound || 1);
       setTotalRounds(room.totalRounds || 5);
+      setRoundHistory(room.roundHistory ?? []);
 
       const me = room.players.find((player) => player.id === activeSocket.id);
       const derivedRole = me?.role ?? "";
@@ -224,6 +243,7 @@ function GameContent() {
     totalRounds,
     gameFinished,
     result,
+    roundHistory,
     onNextRound: handleNextRound,
     onPlayAgain: handlePlayAgain,
   };
