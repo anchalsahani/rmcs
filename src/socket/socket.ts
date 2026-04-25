@@ -1,8 +1,15 @@
 import { io, type Socket } from "socket.io-client";
 
 function getSocketUrl() {
-  const envUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
-  if (envUrl) return envUrl;
+  const envUrl = process.env.NEXT_PUBLIC_SOCKET_URL?.trim();
+  if (envUrl) return envUrl.replace(/\/$/, "");
+
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
+    console.error(
+      "[socket] NEXT_PUBLIC_SOCKET_URL is missing. Production deploys must set it to the Render backend URL."
+    );
+    return "";
+  }
 
   return "http://localhost:5000";
 }
@@ -28,6 +35,11 @@ declare global {
 
 function createSocket() {
   const url = getSocketUrl();
+
+  if (!url) {
+    throw new Error("Missing NEXT_PUBLIC_SOCKET_URL for non-local environments.");
+  }
+
   const instance = io(url, {
     autoConnect: false,
     transports: ["websocket"],
@@ -72,7 +84,16 @@ function getSocket(): Socket | null {
 }
 
 export function connectSocket() {
-  const socket = getSocket();
+  let socket: Socket | null = null;
+
+  try {
+    socket = getSocket();
+  } catch (error) {
+    console.error("[socket] failed to create client", error);
+    alert("Server connection is not configured. Set NEXT_PUBLIC_SOCKET_URL in Vercel.");
+    return null;
+  }
+
   if (socket && !socket.connected) {
     console.log("[socket] connecting to", getSocketUrl());
     socket.connect();
