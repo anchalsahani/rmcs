@@ -22,7 +22,36 @@ const story = Story_Script({
 
 export const metadata: Metadata = {
   title: "Raja Mantri Chor Sipahi",
-  description: "Game",
+  description: "Play the classic Raja Mantri Chor Sipahi game online",
+
+  icons: {
+    icon: "/logo.png",          // favicon
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
+
+  openGraph: {
+    title: "Raja Mantri Chor Sipahi",
+    description: "Play the classic Raja Mantri Chor Sipahi game online",
+    url: "https://yourdomain.com", // 🔥 replace with your deployed URL
+    siteName: "Raja Mantri Chor Sipahi",
+    images: [
+      {
+        url: "/logo.png", // this is what shows when sharing
+        width: 1200,
+        height: 630,
+        alt: "Raja Mantri Chor Sipahi Game",
+      },
+    ],
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Raja Mantri Chor Sipahi",
+    description: "Play the classic Raja Mantri Chor Sipahi game online",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +60,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${chicle.variable} ${indie.variable} ${story.variable}`}>
+    <html
+      lang="en"
+      className={`${chicle.variable} ${indie.variable} ${story.variable}`}
+    >
       <body className="font-body">{children}</body>
     </html>
   );
