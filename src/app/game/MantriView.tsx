@@ -54,6 +54,7 @@ interface Props {
 export default function MantriView({ players, myId, roomId, phase, currentRound, totalRounds, gameFinished, result, roundHistory, onNextRound, onPlayAgain }: Props) {
   const [selected, setSelected] = useState("");
   const [timeLeft, setTimeLeft] = useState(GUESS_TIMER_SECONDS);
+  const raja = players.find((player) => player.role === "raja");
 
   useEffect(() => {
     if (phase === "RESULT") {
@@ -128,6 +129,8 @@ export default function MantriView({ players, myId, roomId, phase, currentRound,
             <PlayerGrid
               players={players}
               myId={myId}
+              revealRoleForId={raja?.id}
+              highlightId={raja?.id}
               selectedId={selected}
               onSelect={setSelected}
               centerContent={

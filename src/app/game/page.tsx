@@ -73,6 +73,8 @@ function GameContent() {
   const requestedRoomId = params.get("room") ?? "";
   const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSessionPersistRef = useRef("");
+  const playersRef = useRef<Player[]>([]);
+  const myRoleRef = useRef("");
 
   const [players, setPlayers] = useState<Player[]>([]);
   const [myId, setMyId] = useState("");
@@ -84,6 +86,14 @@ function GameContent() {
   const [totalRounds, setTotalRounds] = useState(5);
   const [gameFinished, setGameFinished] = useState(false);
   const [roundHistory, setRoundHistory] = useState<RoundHistoryEntry[]>([]);
+
+  useEffect(() => {
+    playersRef.current = players;
+  }, [players]);
+
+  useEffect(() => {
+    myRoleRef.current = myRole;
+  }, [myRole]);
 
   useEffect(() => {
     const activeSocket = connectSocket();
@@ -104,16 +114,32 @@ function GameContent() {
       }, REVEAL_DURATION_MS);
     };
 
+    const mergeKnownRoles = (nextPlayers: Player[], roomState: Room["state"]) => {
+      if (roomState === "WAITING") {
+        return nextPlayers;
+      }
+
+      const previousPlayers = playersRef.current;
+      const previousRoles = new Map(previousPlayers.map((player) => [player.id, player.role]));
+
+      return nextPlayers.map((player) => ({
+        ...player,
+        role: player.role ?? previousRoles.get(player.id),
+      }));
+    };
+
     const applyRoomState = (room: Room) => {
-      setPlayers(room.players);
+      const resolvedPlayers = mergeKnownRoles(room.players, room.state);
+
+      setPlayers(resolvedPlayers);
       setRoomId(room.roomId);
       setResult(room.result ?? null);
       setCurrentRound(room.currentRound || 1);
       setTotalRounds(room.totalRounds || 5);
       setRoundHistory(room.roundHistory ?? []);
 
-      const me = room.players.find((player) => player.id === activeSocket.id);
-      const derivedRole = me?.role ?? "";
+      const me = resolvedPlayers.find((player) => player.id === activeSocket.id);
+      const derivedRole = me?.role ?? myRoleRef.current;
       setMyRole(derivedRole);
 
       if (room.roomId && me?.name) {
