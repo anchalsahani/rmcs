@@ -140,46 +140,6 @@ export default function Home() {
         How To Play
       </button>
 
-      <Image
-        src="/mandala-center.png"
-        alt="mandala"
-        width={900}
-        height={900}
-        className="absolute opacity-20 pointer-events-none z-0"
-      />
-
-      <Image
-        src="/paisley-top-left.png"
-        alt="decor"
-        width={220}
-        height={220}
-        className="absolute top-1 left-1 opacity-30 pointer-events-none z-0"
-      />
-
-      <Image
-        src="/paisley-top-left.png"
-        alt="decor"
-        width={220}
-        height={220}
-        className="absolute top-1 right-1 opacity-30 pointer-events-none scale-x-[-1] z-0"
-      />
-
-      <Image
-        src="/paisley-top-left.png"
-        alt="decor"
-        width={220}
-        height={220}
-        className="absolute bottom-1 left-1 opacity-50 rotate-180 pointer-events-none scale-x-[-1] z-0"
-      />
-
-      <Image
-        src="/paisley-top-left.png"
-        alt="decor"
-        width={220}
-        height={220}
-        className="absolute bottom-1 right-1 opacity-50 rotate-180 pointer-events-none z-0"
-      />
-
       <div className="relative w-[95vw] max-w-[620px] sm:w-[690px] -mt-10 sm:-mt-32 flex justify-center z-10">
 
         <Image
